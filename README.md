@@ -3,7 +3,7 @@ A dashboard for at-a-glance knowledge of the health of the Jekyll ecosystem.
 
 ## Features
 
-Jekyll Dashboard
+Sensu Dashboard
 
 - Shows all our plugins at a glance. Versions. Changes since latest version
 - Shows the core team

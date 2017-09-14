@@ -1,9 +1,9 @@
 {
-	"ImportPath": "github.com/jekyll/dashboard",
+	"ImportPath": "github.com/mbbroberg/dashboard",
 	"GoVersion": "go1.8",
 	"GodepVersion": "v79",
 	"Packages": [
-		"github.com/jekyll/dashboard/..."
+		"github.com/mbbroberg/dashboard/..."
 	],
 	"Deps": [
 		{
