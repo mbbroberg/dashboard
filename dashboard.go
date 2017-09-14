@@ -7,7 +7,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/jekyll/dashboard/triage"
+	"github.com/mbbroberg/dashboard/triage"
 )
 
 var defaultPort = 8000

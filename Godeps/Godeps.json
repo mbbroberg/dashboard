@@ -1,9 +1,9 @@
 {
-	"ImportPath": "github.com/jekyll/dashboard",
+	"ImportPath": "github.com/mbbroberg/dashboard",
 	"GoVersion": "go1.8",
 	"GodepVersion": "v79",
 	"Packages": [
-		"github.com/jekyll/dashboard/..."
+		"github.com/mbbroberg/dashboard/..."
 	],
 	"Deps": [
 		{
@@ -29,6 +29,10 @@
 		{
 			"ImportPath": "golang.org/x/oauth2/internal",
 			"Rev": "b53b38ad8a6435bd399ea76d0fa74f23149cca4e"
+		},
+		{
+			"ImportPath": "gopkg.in/yaml.v2",
+			"Rev": "cd8b52f8269e0feb286dfeef29f8fe4d5b397e0b"
 		}
 	]
 }

@@ -1,0 +1,5 @@
+orgs:
+repos:
+  - sensu-plugins/sensu-plugins-pagerduty
+  - sensu-plugins/sensu-plugins-slack
+exclude_repos:

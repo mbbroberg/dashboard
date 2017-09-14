@@ -1,38 +1,72 @@
 package dashboard
 
 import (
+	"io/ioutil"
 	"log"
+	"path/filepath"
+	"strings"
 	"sync"
 	"time"
+
+	yaml "gopkg.in/yaml.v2"
 )
 
 var (
 	defaultProjectMap map[string]*Project
-	defaultProjects   = []*Project{
-		newProject("jekyll", "jekyll/jekyll", "master", "jekyll"),
-		newProject("jemoji", "jekyll/jemoji", "master", "jemoji"),
-		newProject("mercenary", "jekyll/mercenary", "master", "mercenary"),
-		newProject("jekyll-import", "jekyll/jekyll-import", "master", "jekyll-import"),
-		newProject("jekyll-feed", "jekyll/jekyll-feed", "master", "jekyll-feed"),
-		newProject("jekyll-seo-tag", "jekyll/jekyll-seo-tag", "master", "jekyll-seo-tag"),
-		newProject("jekyll-sitemap", "jekyll/jekyll-sitemap", "master", "jekyll-sitemap"),
-		newProject("jekyll-mentions", "jekyll/jekyll-mentions", "master", "jekyll-mentions"),
-		newProject("jekyll-watch", "jekyll/jekyll-watch", "master", "jekyll-watch"),
-		newProject("jekyll-compose", "jekyll/jekyll-compose", "master", "jekyll-compose"),
-		newProject("jekyll-paginate", "jekyll/jekyll-paginate", "master", "jekyll-paginate"),
-		newProject("jekyll-gist", "jekyll/jekyll-gist", "master", "jekyll-gist"),
-		newProject("jekyll-coffeescript", "jekyll/jekyll-coffeescript", "master", "jekyll-coffeescript"),
-		newProject("jekyll-opal", "jekyll/jekyll-opal", "master", "jekyll-opal"),
-		newProject("classifier-reborn", "jekyll/classifier-reborn", "master", "classifier-reborn"),
-		newProject("jekyll-sass-converter", "jekyll/jekyll-sass-converter", "master", "jekyll-sass-converter"),
-		newProject("jekyll-textile-converter", "jekyll/jekyll-textile-converter", "master", "jekyll-textile-converter"),
-		newProject("jekyll-redirect-from", "jekyll/jekyll-redirect-from", "master", "jekyll-redirect-from"),
-		newProject("github-metadata", "jekyll/github-metadata", "master", "jekyll-github-metadata"),
-		newProject("jekyll-archives", "jekyll/jekyll-archives", "master", "jekyll-archives"),
-		newProject("plugins website", "jekyll/plugins", "gh-pages", ""),
-		newProject("jekyll docker", "jekyll/docker", "master", ""),
-	}
+	defaultProjects   = allProjects("repos.yml")
 )
+
+// Repos struct is a collection of GitHub Organizations and specific repos.
+type Repos struct {
+	Orgs    []string
+	Repos   []string
+	Exclude []string `yaml:"exclude_repos"`
+}
+
+func allProjects(reposYaml string) []*Project {
+	var returnValue []*Project
+
+	// Assuming YAML file passed
+	filename, _ := filepath.Abs(reposYaml)
+	yamlFile, err := ioutil.ReadFile(filename)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Initialize the struct we'll use below
+	var r Repos
+
+	err = yaml.Unmarshal(yamlFile, &r)
+	if err != nil {
+		log.Fatalf("error: %v", err)
+	}
+
+	for _, orgRepo := range r.Repos {
+		repo := strings.Split(orgRepo, "/")[1]
+
+		returnValue = append(returnValue, newProject(repo, orgRepo, "master", repo))
+	}
+	//
+	// // Unmarshalled here. Start simple: for each Repo listed, go get it.
+	// // Add to the return.
+	//
+	// fmt.Println(r.Orgs)
+	// fmt.Println(r.Exclude)
+	// fmt.Println(r.Repos)
+	//
+	// // For each in repos
+	// //
+
+	// I still need to return a list of repos in this format, but I'd like to
+	// Import that shit from repos.yml. Let's try this.
+	// []*Project{
+	// 	newProject("sensu-plugin", "sensu-plugins/sensu-plugin", "master", "sensu-plugin"),
+	// 	newProject("sensu-plugins-slack", "sensu-plugins/sensu-plugins-slack", "master", "sensu-plugins-slack"),
+	// 	newProject("sensu-extension", "sensu-extensions/sensu-extension", "master", "sensu-extension"),
+	// 	newProject("sensu-extensions-influxdb", "sensu-extensions/sensu-extensions-influxdb", "master", "sensu-extensions-influxdb"),
+	// }
+	return returnValue
+}
 
 func init() {
 	go resetProjectsPeriodically()

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/jekyll/dashboard"
+	"github.com/mbbroberg/dashboard"
 )
 
 func main() {
