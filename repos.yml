@@ -1,4 +1,5 @@
 orgs:
+  - sensu-extensions
 repos:
   - sensu-plugins/sensu-plugins-pagerduty
   - sensu-plugins/sensu-plugins-slack

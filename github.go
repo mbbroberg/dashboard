@@ -73,6 +73,21 @@ func github(nwo string) chan *GitHub {
 	return githubChan
 }
 
+func allRepos(org string) (reposList []string) {
+	opt := &gh.RepositoryListByOrgOptions{}
+	repos, _, err := githubClient.Repositories.ListByOrg(context.Background(), org, opt)
+
+	// return the empty slice if this fails. Hope that works ¯\_(ツ)_/¯
+	if err != nil {
+		log.Printf("error fetching org's repos %s: %v", repos, err)
+	}
+
+	for _, repo := range repos {
+		reposList = append(reposList, gh.Stringify(*repo.FullName))
+	}
+	return reposList
+}
+
 func openIssues(owner, repo string) int {
 	repoData, _, err := githubClient.Repositories.Get(context.Background(), owner, repo)
 	if err != nil {

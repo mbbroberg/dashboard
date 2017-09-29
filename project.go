@@ -41,21 +41,23 @@ func allProjects(reposYaml string) []*Project {
 		log.Fatalf("error: %v", err)
 	}
 
+	// Explicitly requested repositories
 	for _, orgRepo := range r.Repos {
 		repo := strings.Split(orgRepo, "/")[1]
-
 		returnValue = append(returnValue, newProject(repo, orgRepo, "master", repo))
 	}
-	//
-	// // Unmarshalled here. Start simple: for each Repo listed, go get it.
-	// // Add to the return.
-	//
-	// fmt.Println(r.Orgs)
-	// fmt.Println(r.Exclude)
-	// fmt.Println(r.Repos)
-	//
-	// // For each in repos
-	// //
+
+	// Repos requested by organization
+	for _, org := range r.Orgs {
+		// fmt.Println("Entering range of orgs")
+		x := allRepos(org)
+		// fmt.Println("Exiting range of orgs")
+		for _, orgRepo := range x {
+			// fmt.Println("Entering nested")
+			repo := strings.Split(orgRepo, "/")[1]
+			returnValue = append(returnValue, newProject(repo, orgRepo, "master", repo))
+		}
+	}
 
 	// I still need to return a list of repos in this format, but I'd like to
 	// Import that shit from repos.yml. Let's try this.
